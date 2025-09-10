@@ -1,0 +1,9 @@
+/* src/App.css */
+.app {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
