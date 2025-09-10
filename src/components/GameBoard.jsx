@@ -1,6 +1,8 @@
 // src/components/GameBoard.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import "./GameBoard.css";
+
+
 
 
 // --- imágenes (usa exactamente los nombres de tus archivos en /src/assets) ---
@@ -70,18 +72,40 @@ export default function GameBoard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
 
+const hasStartedLevel10 = useRef(false);
+useEffect(() => {
+  shuffleCards(level);
+  setShowWinMessage(false);
+  setShowPrize(false);
+
+  // 👇 NUEVO: marcar si estamos realmente dentro del nivel 10
+  if (level === 10) {
+    hasStartedLevel10.current = true;
+  } else {
+    hasStartedLevel10.current = false;
+  }
+}, [level]);
+
+  
   // Detectar fin de nivel (todas las cartas emparejadas)
-  useEffect(() => {
-    if (cards.length > 0 && matched.length === cards.length) {
-      if (level < 10) {
-        const t = setTimeout(() => setLevel((p) => p + 1), 1000); // sube 1 nivel después de 1s
-        return () => clearTimeout(t);
-      } else {
-        // nivel 10 completado => mostrar mensaje final
-        setTimeout(() => setShowWinMessage(true), 600);
-      }
+ useEffect(() => {
+  if (cards.length > 0 && matched.length === cards.length) {
+    if (level < 9) {
+      const t = setTimeout(() => setLevel((p) => p + 1), 1000);
+      return () => clearTimeout(t);
+    } else if (level === 9) {
+      const t = setTimeout(() => setLevel(10), 1000);
+      return () => clearTimeout(t);
+    } else if (level === 10 && hasStartedLevel10.current) {
+      // 👇 Solo mostrar cartel si el jugador ya está en el nivel 10 y lo terminó
+      const t = setTimeout(() => setShowWinMessage(true), 600);
+      return () => clearTimeout(t);
     }
-  }, [matched, cards, level]);
+  }
+}, [matched, cards, level]);
+
+
+
 
   // Manejar la lógica al dar vuelta una carta (índice)
   const handleFlip = (idx) => {
@@ -144,8 +168,12 @@ export default function GameBoard() {
         <p>Nivel: {level}</p>
         <p>Errores: {errors}</p>
         <div style={{ marginTop: 10 }}>
-          <button className="btn" onClick={restartLevel}>🔄 Reiniciar</button>
-        </div>
+  <button className="btn" onClick={restartLevel}>🔄 Reiniciar</button>
+  <button className="btn" onClick={() => setLevel((prev) => Math.min(prev + 1, 10))}>
+    ⏫ Subir Nivel
+  </button>
+</div>
+
       </div>
 
       {/* tablero: columnas dinámicas según cantidad de cartas */}

@@ -50,7 +50,7 @@ body, html, #root {
   text-align: center;
   margin-bottom: 18px;
   color: var(--muted);
-   background: #111;
+   background: rgba(0, 0, 0, 0.2); /* negro con 50% de opacidad */
   color: #fff;
   border: 1px solid rgba(255,255,255,0.06);
   padding: 8px 12px;
@@ -62,7 +62,7 @@ body, html, #root {
 
 /* Botones generales */
 .btn {
-  background: #111;
+  background: rgba(0, 0, 0, 0.2); /* negro con 50% de opacidad */
   color: #fff;
   border: 1px solid rgba(255,255,255,0.06);
   padding: 8px 12px;
@@ -111,8 +111,13 @@ body, html, #root {
   gap: 16px;
   justify-content: center;
   align-items: center;
-  margin-top: 14px;
+  margin: 14px auto 0;   /* 👈 centrado horizontal */
+  width: fit-content;    /* 👈 el grid ocupa solo lo necesario */
+  max-width: 100%;       /* 👈 evita que se desborde en pantallas chicas */
 }
+
+
+
 
 /* Carta */
 .card {
